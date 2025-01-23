@@ -4,9 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskManager;
 use App\Http\Controllers\AuthManager;
 
-//Home Page
-//Route::get('/', [TaskManager::class, 'listTask'])
-   // ->name('home');
+// Redirect root `/` to the login page if the user is not authenticated
+Route::get('/', function () {
+    return redirect()->route('login');
+})->name('landing');
 
 //Login Page view
 Route::get('login', [AuthManager::class, 'login'])
@@ -16,27 +17,24 @@ Route::get('login', [AuthManager::class, 'login'])
 Route::post('login', [AuthManager::class, 'loginPost'])
     ->name('login.post');
 
-//register page view
+//Register page view
 Route::get('register', [AuthManager::class, 'register'])
     ->name('register');
 
-//To register form
+//To Register form
 Route::post('register', [AuthManager::class, 'registerPost'])
     ->name('register.post');
 
-//logout
+//Logout
 Route::get('logout', [AuthManager::class, 'logout'])
     ->name('logout');
 
-//login required routes
+//Login-required routes
 Route::middleware('auth')->group(function () {
 
-    Route::get('/', [TaskManager::class, 'listTask'])
+    //Home Page
+    Route::get('/home', [TaskManager::class, 'listTask'])
         ->name('home');
-
-    //list all tasks
-    //Route::get('tasks/list', [TaskManager::class, 'listTask'])
-        //->name('task.list');
 
     //Add Task Form view
     Route::get('task/add', [TaskManager::class, 'addTask'])
@@ -44,7 +42,7 @@ Route::middleware('auth')->group(function () {
     
     //Add Task
     Route::post('task/add', [TaskManager::class, 'addTaskPost'])
-    ->name('task.add.post');
+        ->name('task.add.post');
 
     //Update Task Status
     Route::get('task/status/{id}', [TaskManager::class, 'updateTaskStatus'])
@@ -62,11 +60,11 @@ Route::middleware('auth')->group(function () {
     Route::get('task/delete/{id}', [TaskManager::class, 'deleteTask'])
         ->name('task.delete');
 
-    //list of task
+    //List of tasks
     Route::get('/tasks', [TaskManager::class, 'listTask'])
         ->name('task.list');
-    
 });
+
 
 
 
